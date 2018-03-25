@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { API, Auth, Storage, Analytics } from 'aws-amplify'
+import AWS from 'aws-sdk'
 import Select from 'react-select'
 import 'react-select/dist/react-select.css'
+
+AWS.config.update({ region: 'ap-southeast-2' })
 
 const styles = {
   container: {
@@ -17,7 +20,7 @@ const styles = {
     margin: '50px',
   },
   accentSelect: {
-    width: '200px',
+    width: '250px',
   },
   accentDiv: {
     display: 'flex',
@@ -44,48 +47,71 @@ class Input extends Component {
       text: '',
       S3Key: '',
       voiceId: 'Joanna',
-      audioSrc: ''
+      audioSrc: '',
+      s3Voices: [],
     }
 
     this.handleTextChange = this.handleTextChange.bind(this)
     this.talk = this.talk.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
-  handleChange(selectedOption) {
-    this.setState({ selectedOption })
-    console.log(`Selected: ${selectedOption.label}`)
-  }
   handleTextChange(event) {
     this.setState({ text: event.target.value })
   }
   talk(e) {
     e.preventDefault()
-    const { text, voiceId } = this.state
-    console.log('talk', text, voiceId)
-    if (!text || !voiceId) return
-    API.post('talk', '/items', { response: true, body: { text, voiceId } })
+    const { text, selectedOption } = this.state
+    if (!text || !selectedOption) return
+    console.log(text, selectedOption, 'see ya later')
+    API.post('talk', '/items', { response: true, body: { text, voiceId: selectedOption.value } })
       .then((res) => {
-        console.log(res.data.key, 'apple')
         this.setState({ S3Key: res.data.key })
-        
+
         Storage.vault.get(res.data.key)
-          .then(data =>{
-            console.log(data, 'great success')
-              this.setState({audioSrc: data})
+          .then((data) => {
+            this.setState({ audioSrc: data })
           })
           .catch(err => console.log(err, 'massive error'))
       })
       .catch(err => console.log(err, 'errr'))
   }
 
+  componentWillUpdate(prevProps, nextState) {
+    if (nextState.audioSrc !== this.state.audioSrc) {
+      const typeWriter = new Audio(nextState.audioSrc)
+      typeWriter.play()
+    }
+    console.log('next', nextState)
+  }
+
+  componentDidMount() {
+    this.getAWSVoices((err, res) => {
+      this.setState({ s3Voices: res, selectedOption: res[Math.floor(res.length * Math.random())] })
+    })
+  }
+
+  getAWSVoices(cb) {
+    Auth.currentCredentials()
+      .then((creds) => {
+        const polly = new AWS.Polly({ credentials: Auth.essentialCredentials(creds) })
+        polly.describeVoices({}, (err, data) => {
+          if (err) {
+            console.log(err)
+            return cb(null, [])
+          }
+
+          // need to make our own data selector
+          return cb(null, data.Voices.map(voice => ({ value: voice.Id, label: `${voice.Name} (${voice.LanguageName})` })))
+        })
+      })
+  }
+  handleChange(selectedOption) {
+    this.setState({ selectedOption})
+  }
+
   render() {
     const { selectedOption } = this.state
     const value = selectedOption && selectedOption.value
-    if(this.state.audioSrc) {
-      return (
-                    <audio src={this.state.audioSrc} controls />
-      )
-    }
     return (
       <div style={styles.container}>
         <div style={styles.accentDiv}>
@@ -96,10 +122,8 @@ class Input extends Component {
             name="form-field-name"
             value={value}
             onChange={this.handleChange}
-            options={[
-          { value: 'one', label: 'One' },
-          { value: 'two', label: 'Two' },
-        ]}
+            options={this.state.s3Voices}
+
           />
         </div>
 
@@ -111,7 +135,6 @@ class Input extends Component {
           className="input is-large"
           placeholder="hello my name is vlad from russia"
         />
-        <textarea className="textarea" style={styles.textBox} placeholder="Textarea" />
 
         <a
           style={styles.talkButton}
