@@ -1,5 +1,39 @@
 --- !com.amazonaws.mobilehub.v0.Project 
 features:
+  cloudlogic: !com.amazonaws.mobilehub.v0.CloudLogic 
+    components:
+      talk: !com.amazonaws.mobilehub.v0.API 
+        attributes:
+          name: talk
+          requires-signin: false
+          sdk-generation-stage-name: Development
+        paths:
+          /items: !com.amazonaws.mobilehub.v0.Function 
+            codeFilename: uploads/talk-20180325213038.zip
+            description: 'Handler for calls to resource path : /items/{proxy+}'
+            enableCORS: true
+            environment: {}
+            handler: lambda.handler
+            hashcode: CjgCFNNNITQKrCt4B2JBIMZBdi9yPY0iOyVr/zJeIQw=
+            memorySize: '512'
+            modified: '2018-03-25T10:31:30.785+0000'
+            name: talk
+            runtime: nodejs6.10
+            timeout: '3'
+            version: rVo_knVS60SpanoZdkdi8xm2xOQuXpyn
+          '/items/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
+            codeFilename: uploads/talk-20180325213038.zip
+            description: 'Handler for calls to resource path : /items/{proxy+}'
+            enableCORS: true
+            environment: {}
+            handler: lambda.handler
+            hashcode: CjgCFNNNITQKrCt4B2JBIMZBdi9yPY0iOyVr/zJeIQw=
+            memorySize: '512'
+            modified: '2018-03-25T10:31:30.785+0000'
+            name: talk
+            runtime: nodejs6.10
+            timeout: '3'
+            version: yCBZPA87LsCCDLgSRnFYm4QtCbWN_EoF
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
       enabled: true
@@ -18,14 +52,17 @@ features:
         attributes:
           alias-attributes:
             - email
-            - phone_number
-          mfa-configuration: ON
+          mfa-configuration: OFF
           name: userpool
           password-policy: !com.amazonaws.mobilehub.ConvertibleMap 
             min-length: '8'
-            require-lower-case: true
-            require-numbers: true
-            require-symbols: true
-            require-upper-case: true
-name: accentdemo-2018-03-24-15-46-52
+            require-lower-case: false
+            require-numbers: false
+            require-symbols: false
+            require-upper-case: false
+  user-files: !com.amazonaws.mobilehub.v0.UserFiles 
+    attributes:
+      enabled: true
+      wildcard-cors-policy: true
+name: accentdemo-2018-Marh
 region: ap-southeast-2

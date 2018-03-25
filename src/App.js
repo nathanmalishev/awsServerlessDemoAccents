@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import 'bulma/css/bulma.css'
-import Amplify, { Auth } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react' // Or 'aws-amplify-react-native';
 
-import aws_exports from './aws-exports'
 import Input from './Input'
 
-Amplify.configure(aws_exports)
+import List from './List'
 
 const styles = {
   container: {
@@ -23,6 +21,7 @@ class App extends Component {
       <div style={styles.container}>
         <Input />
         {/* Previous shit down here */}
+        <List />
       </div>
     )
   }
