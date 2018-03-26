@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import { API, Auth, Storage, Analytics } from 'aws-amplify'
 import AWS from 'aws-sdk'
 import Select from 'react-select'
+import { connect } from 'react-redux'
 import 'react-select/dist/react-select.css'
+import { addTalk } from './actions'
 
 AWS.config.update({ region: 'ap-southeast-2' })
 
@@ -17,6 +19,8 @@ const styles = {
   },
   textBox: {
     width: '600px',
+  },
+  textBoxDiv: {
     margin: '50px',
   },
   accentSelect: {
@@ -36,6 +40,11 @@ const styles = {
   talkButton: {
 
   },
+  errorMsg: {
+    color: 'red',
+    fontSize: '20px',
+    marginBottom: '5px',
+  },
 }
 
 
@@ -46,34 +55,21 @@ class Input extends Component {
       selectedOption: '',
       text: '',
       S3Key: '',
-      voiceId: 'Joanna',
       audioSrc: '',
       s3Voices: [],
+      isLoading: false,
+      error: false,
     }
 
     this.handleTextChange = this.handleTextChange.bind(this)
     this.talk = this.talk.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
-  handleTextChange(event) {
-    this.setState({ text: event.target.value })
-  }
-  talk(e) {
-    e.preventDefault()
-    const { text, selectedOption } = this.state
-    if (!text || !selectedOption) return
-    console.log(text, selectedOption, 'see ya later')
-    API.post('talk', '/items', { response: true, body: { text, voiceId: selectedOption.value } })
-      .then((res) => {
-        this.setState({ S3Key: res.data.key })
 
-        Storage.vault.get(res.data.key)
-          .then((data) => {
-            this.setState({ audioSrc: data })
-          })
-          .catch(err => console.log(err, 'massive error'))
-      })
-      .catch(err => console.log(err, 'errr'))
+  componentDidMount() {
+    this.getAWSVoices((err, res) => {
+      this.setState({ s3Voices: res, selectedOption: res[Math.floor(res.length * Math.random())] })
+    })
   }
 
   componentWillUpdate(prevProps, nextState) {
@@ -81,13 +77,6 @@ class Input extends Component {
       const typeWriter = new Audio(nextState.audioSrc)
       typeWriter.play()
     }
-    console.log('next', nextState)
-  }
-
-  componentDidMount() {
-    this.getAWSVoices((err, res) => {
-      this.setState({ s3Voices: res, selectedOption: res[Math.floor(res.length * Math.random())] })
-    })
   }
 
   getAWSVoices(cb) {
@@ -105,13 +94,41 @@ class Input extends Component {
         })
       })
   }
+  talk(e) {
+    e.preventDefault()
+    const { text, selectedOption } = this.state
+    if (!text || !selectedOption) return
+    this.setState({ isLoading: true })
+    API.post('talk', '/items', { response: true, body: { text, voiceId: selectedOption.value } })
+      .then((res) => {
+        this.setState({ S3Key: res.data.key })
+
+        Storage.vault.get(res.data.key)
+          .then((data) => {
+            this.setState({ audioSrc: data, isLoading: false, error: false })
+            this.props.addTalk( res.data.key, selectedOption.value )
+          })
+          .catch((err) => {
+            // console.log(err, 'massive error')
+            this.setState({ isLoading: false, error: true })
+          })
+      })
+      .catch((err) => {
+        // console.log(err, 'errr')
+        this.setState({ isLoading: false, error: true })
+      })
+  }
   handleChange(selectedOption) {
-    this.setState({ selectedOption})
+    this.setState({ selectedOption })
+  }
+  handleTextChange(event) {
+    this.setState({ text: event.target.value })
   }
 
   render() {
     const { selectedOption } = this.state
     const value = selectedOption && selectedOption.value
+    const errorMsg = (<p style={styles.errorMsg}>Sorry something went wrong please try agian later!</p>)
     return (
       <div style={styles.container}>
         <div style={styles.accentDiv}>
@@ -128,17 +145,20 @@ class Input extends Component {
         </div>
 
 
-        <input
-          onChange={this.handleTextChange}
-          style={styles.textBox}
-          type="text"
-          className="input is-large"
-          placeholder="hello my name is vlad from russia"
-        />
+        <div className={this.state.isLoading ? 'control is-loading is-large' : 'control'} style={styles.textBoxDiv}>
+          <input
+            onChange={this.handleTextChange}
+            style={styles.textBox}
+            type="text"
+            className="input is-large"
+            placeholder="hello my name is vlad from russia"
+          />
+        </div>
 
+        {this.state.error ? errorMsg : null}
         <a
           style={styles.talkButton}
-          className="button is-primary is-large"
+          className={this.state.isLoading ? 'button is-primary is-large is-loading' : 'button is-primary is-large'}
           onClick={this.talk}
         >
           TALK
@@ -153,4 +173,15 @@ Input.defaultProps = {}
 
 Input.propTypes = {}
 
-export default Input
+const mapStateToProps = (state, ownProps) => ({
+  isLoading: state.getTalkLoading,
+})
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  addTalk: (key, name) => dispatch(addTalk(key, name)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Input)

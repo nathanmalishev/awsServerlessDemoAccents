@@ -1,16 +1,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Amplify from 'aws-amplify'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
 import './index.css'
 import App from './App'
 import registerServiceWorker from './registerServiceWorker'
-import aws_exports from './aws-exports'
+import awsExports from './aws-exports'
+import rootReducer from './reducers'
 
-//Amplify.Logger.LOG_LEVEL = 'DEBUG'
-Amplify.configure(aws_exports)
+
+const store = createStore(
+  rootReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+)
+// Amplify.Logger.LOG_LEVEL = 'DEBUG'
+Amplify.configure(awsExports)
 
 ReactDOM.render(
-  <App />,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root'),
 )
 registerServiceWorker()
