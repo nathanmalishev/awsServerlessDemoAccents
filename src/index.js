@@ -17,14 +17,9 @@ const store = createStore(
 // Amplify.Logger.LOG_LEVEL = 'DEBUG'
 Amplify.configure(awsExports)
 
-const federated = {
-  facebook_app_id: '442540206182549',
-  google_client_id: '453030685440-dnqb50sp9a5pkrdbnjcbhps3v3psnqdu.apps.googleusercontent.com'
-}
-
 ReactDOM.render(
   <Provider store={store}>
-    <App federated={federated} />
+    <App/>
   </Provider>,
   document.getElementById('root'),
 )

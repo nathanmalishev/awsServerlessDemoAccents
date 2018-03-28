@@ -21,7 +21,11 @@ const styles = {
     width: '600px',
   },
   textBoxDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     margin: '50px',
+    width:'100%'
   },
   accentSelect: {
     width: '250px',
@@ -43,7 +47,7 @@ const styles = {
   errorMsg: {
     color: 'red',
     fontSize: '20px',
-    marginBottom: '5px',
+    margin: '5px',
   },
 }
 
@@ -82,7 +86,7 @@ class Input extends Component {
   getAWSVoices(cb) {
     Auth.currentCredentials()
       .then((creds) => {
-        const polly = new Polly({ credentials: Auth.essentialCredentials(creds) })
+        const polly = new Polly({ credentials: Auth.essentialCredentials(creds), region: 'ap-southeast-2' })
         polly.describeVoices({}, (err, data) => {
           if (err) {
             console.log(err)
@@ -98,6 +102,8 @@ class Input extends Component {
     e.preventDefault()
     const { text, selectedOption } = this.state
     if (!text || !selectedOption) return
+    // analytics event
+    Analytics.record('click_talk')
     this.setState({ isLoading: true })
     API.post('talk', '/items', { response: true, body: { text, voiceId: selectedOption.value } })
       .then((res) => {

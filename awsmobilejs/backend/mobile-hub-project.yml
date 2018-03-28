@@ -9,31 +9,31 @@ features:
           sdk-generation-stage-name: Development
         paths:
           /items: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/talk-20180329083304.zip
+            codeFilename: uploads/talk-20180329094345.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: zX5F6//ABqCON+5hDZM/ICmzYKTtCj72t3g1YTQ1M5I=
+            hashcode: 0x734OehZsrxRAfflyjZUMl6ooiRDPec9ukIxmpnXxo=
             memorySize: '512'
-            modified: '2018-03-28T21:33:50.233+0000'
+            modified: '2018-03-28T22:44:27.899+0000'
             name: talk
             runtime: nodejs6.10
             timeout: '3'
-            version: v6r6tajM9qNU8ag.tPfhWdSNXpbNp9eT
+            version: wrzS2S_i_uByOmT7_zunsW.y2DMxY0F3
           '/items/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/talk-20180329083304.zip
+            codeFilename: uploads/talk-20180329094345.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: zX5F6//ABqCON+5hDZM/ICmzYKTtCj72t3g1YTQ1M5I=
+            hashcode: 0x734OehZsrxRAfflyjZUMl6ooiRDPec9ukIxmpnXxo=
             memorySize: '512'
-            modified: '2018-03-28T21:33:50.233+0000'
+            modified: '2018-03-28T22:44:27.899+0000'
             name: talk
             runtime: nodejs6.10
             timeout: '3'
-            version: 1KjeFbyujQrOwAyEdTDcgDjDHHfNNCCW
+            version: jE1.9F_BmAuV9syIex_KfE.ddkBwQ5eX
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
       enabled: true
@@ -52,6 +52,12 @@ features:
         attributes:
           provider-id: '442540206182549'
           provider-name: facebook
+      sign-in-google: !com.amazonaws.mobilehub.v0.OpenIDConnectIdentityProvider 
+        attributes:
+          open-id-connect-audience-android: ''
+          open-id-connect-audience-ios: 453030685440-p5tgtpo7upgmlkffgdiu8e8qjcmb56df.apps.googleusercontent.com
+          open-id-connect-audience-webapp: 453030685440-dnqb50sp9a5pkrdbnjcbhps3v3psnqdu.apps.googleusercontent.com
+          open-id-provider-url: 'https://accounts.google.com'
   user-files: !com.amazonaws.mobilehub.v0.UserFiles 
     attributes:
       enabled: true
