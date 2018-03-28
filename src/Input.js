@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import 'react-select/dist/react-select.css'
 import { addTalk } from './actions'
 
-//AWS.config.update({ region: 'ap-southeast-2' })
+// AWS.config.update({ region: 'ap-southeast-2' })
 
 const styles = {
   container: {
@@ -25,7 +25,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     margin: '50px',
-    width:'100%'
+    width: '100%',
   },
   accentSelect: {
     width: '250px',
@@ -78,8 +78,8 @@ class Input extends Component {
 
   componentWillUpdate(prevProps, nextState) {
     if (nextState.audioSrc !== this.state.audioSrc) {
-      const typeWriter = new Audio(nextState.audioSrc)
-      typeWriter.play()
+      // const typeWriter = new Audio(nextState.audioSrc)
+      // typeWriter.play()
     }
   }
 
@@ -112,7 +112,9 @@ class Input extends Component {
         Storage.vault.get(res.data.key)
           .then((data) => {
             this.setState({ audioSrc: data, isLoading: false, error: false })
-            this.props.addTalk( res.data.key, selectedOption.value )
+            this.props.addTalk(res.data.key, selectedOption.value)
+            const typeWriter = new Audio(data)
+            typeWriter.play()
           })
           .catch((err) => {
             // console.log(err, 'massive error')
@@ -189,5 +191,5 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Input)
