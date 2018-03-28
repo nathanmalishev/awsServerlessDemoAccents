@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { API, Auth, Storage, Analytics } from 'aws-amplify'
-import AWS from 'aws-sdk'
+import Polly from 'aws-sdk/clients/polly'
 import Select from 'react-select'
 import { connect } from 'react-redux'
 import 'react-select/dist/react-select.css'
 import { addTalk } from './actions'
 
-AWS.config.update({ region: 'ap-southeast-2' })
+//AWS.config.update({ region: 'ap-southeast-2' })
 
 const styles = {
   container: {
@@ -82,7 +82,7 @@ class Input extends Component {
   getAWSVoices(cb) {
     Auth.currentCredentials()
       .then((creds) => {
-        const polly = new AWS.Polly({ credentials: Auth.essentialCredentials(creds) })
+        const polly = new Polly({ credentials: Auth.essentialCredentials(creds) })
         polly.describeVoices({}, (err, data) => {
           if (err) {
             console.log(err)

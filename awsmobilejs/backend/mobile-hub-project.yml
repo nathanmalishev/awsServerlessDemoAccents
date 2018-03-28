@@ -9,31 +9,31 @@ features:
           sdk-generation-stage-name: Development
         paths:
           /items: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/talk-20180326215254.zip
+            codeFilename: uploads/talk-20180329083304.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: 2k63eRTJZf0A+mZy9PhjPVaJ/6Qy/a44afHPNr8n5ms=
+            hashcode: zX5F6//ABqCON+5hDZM/ICmzYKTtCj72t3g1YTQ1M5I=
             memorySize: '512'
-            modified: '2018-03-26T10:53:36.949+0000'
+            modified: '2018-03-28T21:33:50.233+0000'
             name: talk
             runtime: nodejs6.10
             timeout: '3'
-            version: CRJgZ4Yb5HTBqKpX.OuLK.0R7lB1nbPk
+            version: v6r6tajM9qNU8ag.tPfhWdSNXpbNp9eT
           '/items/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/talk-20180326215254.zip
+            codeFilename: uploads/talk-20180329083304.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: 2k63eRTJZf0A+mZy9PhjPVaJ/6Qy/a44afHPNr8n5ms=
+            hashcode: zX5F6//ABqCON+5hDZM/ICmzYKTtCj72t3g1YTQ1M5I=
             memorySize: '512'
-            modified: '2018-03-26T10:53:36.949+0000'
+            modified: '2018-03-28T21:33:50.233+0000'
             name: talk
             runtime: nodejs6.10
             timeout: '3'
-            version: 83VNAPtNRd5TBH8RvbiW8h9XSbvT2FtE
+            version: 1KjeFbyujQrOwAyEdTDcgDjDHHfNNCCW
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
       enabled: true
@@ -48,18 +48,10 @@ features:
       enabled: true
       optional-sign-in: true
     components:
-      sign-in-user-pools: !com.amazonaws.mobilehub.v0.UserPoolsIdentityProvider 
+      sign-in-facebook: !com.amazonaws.mobilehub.v0.StandardIdentityProvider 
         attributes:
-          alias-attributes:
-            - email
-          mfa-configuration: OFF
-          name: userpool
-          password-policy: !com.amazonaws.mobilehub.ConvertibleMap 
-            min-length: '8'
-            require-lower-case: false
-            require-numbers: false
-            require-symbols: false
-            require-upper-case: false
+          provider-id: '442540206182549'
+          provider-name: facebook
   user-files: !com.amazonaws.mobilehub.v0.UserFiles 
     attributes:
       enabled: true
