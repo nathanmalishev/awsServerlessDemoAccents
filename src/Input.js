@@ -153,7 +153,7 @@ class Input extends Component {
         </div>
 
 
-        <div className={this.state.isLoading ? 'control is-loading is-large' : 'control'} style={styles.textBoxDiv}>
+        <div className={'is-large control'} style={styles.textBoxDiv}>
           <input
             onChange={this.handleTextChange}
             style={styles.textBox}
