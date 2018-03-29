@@ -111,10 +111,10 @@ class Input extends Component {
 
         Storage.vault.get(res.data.key)
           .then((data) => {
-            this.setState({ audioSrc: data, isLoading: false, error: false })
-            this.props.addTalk(res.data.key, selectedOption.value)
             const typeWriter = new Audio(data)
             typeWriter.play()
+            this.setState({ audioSrc: data, isLoading: false, error: false })
+            this.props.addTalk(res.data.key, selectedOption.value)
           })
           .catch((err) => {
             // console.log(err, 'massive error')
