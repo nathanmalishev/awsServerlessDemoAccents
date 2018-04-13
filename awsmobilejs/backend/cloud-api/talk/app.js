@@ -8,7 +8,8 @@ See the License for the specific language governing permissions and limitations 
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const AWS = require('aws-sdk')
+const AWSXRay = require('aws-xray-sdk')
+const AWS = AWSXRay.captureAWS(require('aws-sdk'))
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 
 // Declare a new express app
@@ -43,6 +44,54 @@ app.get('/items/*', (req, res) => {
 /** **************************
 * Example post method *
 *************************** */
+
+app.post('/itemsPublic', (req, res) => {
+  // Add your code here
+  const polly = new AWS.Polly()
+  const s3 = new AWS.S3()
+
+  const { text, voiceId } = req.body
+
+  if (!text || !voiceId) {
+    res.status = 500
+    res.json({ failuer: 'Text or voiceId not provided' })
+    return
+  }
+  const { cognitoIdentityId } = req.apiGateway.event.requestContext.identity
+
+  polly.synthesizeSpeech({
+    OutputFormat: 'mp3',
+    Text: text,
+    TextType: 'text',
+    VoiceId: voiceId,
+  }, (err, data) => {
+    if (err) {
+      console.log(err)
+      res.status = 500
+      res.json({ failuer: 'Could not synthesizeSpeech' })
+    } else {
+      // Data.AudioStream is out bytes we want to upload to s3
+      const s3Key = `${voiceId}_${Date.now()}.mp3`
+      const publicBucket = `public/${cognitoIdentityId}/`
+      s3.putObject({
+        Body: data.AudioStream,
+        Bucket: 'accentdemomarh-userfiles-mobilehub-1258765760', // change for your bucket
+        Key: `${publicBucket}${s3Key}`,
+      }, (s3Err) => {
+        if (s3Err) {
+          console.log(s3Err)
+          res.status = 500
+          res.json({ failure: 'Could not save media file' })
+        } else {
+          res.json({
+            success: 'Succesfully uploaded audio file!',
+            key: s3Key,
+          })
+        }
+      })
+    }
+  })
+})
 
 app.post('/items', (req, res) => {
   // Add your code here
