@@ -9,31 +9,31 @@ features:
           sdk-generation-stage-name: Development
         paths:
           /items: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/talk-20180425200347.zip
+            codeFilename: uploads/talk-20180425201358.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: 5j51EiqefIPUoDntCMRB4pGBsIcwWEouylB7z4J2oa0=
+            hashcode: IRA6R6+lQ352P9N89xD+kTWcElqFxzQBIvX6junROt4=
             memorySize: '512'
-            modified: '2018-04-25T10:04:39.215+0000'
+            modified: '2018-04-25T10:14:44.743+0000'
             name: talk
             runtime: nodejs8.10
             timeout: '3'
-            version: ChkZxX5ia8s3XtftV06iILf4X8.5dQ0u
-          '/items/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/talk-20180425200347.zip
+            version: crx9lamasGD06HcJbqA0j8Mu55f0mCdd
+          '/publicitems': !com.amazonaws.mobilehub.v0.Function 
+            codeFilename: uploads/talk-20180425201358.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: 5j51EiqefIPUoDntCMRB4pGBsIcwWEouylB7z4J2oa0=
+            hashcode: IRA6R6+lQ352P9N89xD+kTWcElqFxzQBIvX6junROt4=
             memorySize: '512'
-            modified: '2018-04-25T10:04:39.215+0000'
+            modified: '2018-04-25T10:14:44.743+0000'
             name: talk
             runtime: nodejs8.10
             timeout: '3'
-            version: 79fuMIPFvfe9NrD.MbVLnDLSFApk3lD5
+            version: _UbDFYhnyMCiqMHloihq6flpKQCeFWGw
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
       enabled: true
