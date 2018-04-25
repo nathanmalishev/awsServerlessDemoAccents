@@ -86,6 +86,7 @@ app.post('/publicitems', (req, res) => {
           res.json({
             success: 'Succesfully uploaded audio file!',
             key: s3Key,
+            cognitoIdentity: cognitoIdentityId,
           })
         }
       })
