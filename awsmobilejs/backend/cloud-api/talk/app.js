@@ -45,7 +45,7 @@ app.get('/items/*', (req, res) => {
 * Example post method *
 *************************** */
 
-app.post('/itemsPublic', (req, res) => {
+app.post('/publicitems', (req, res) => {
   // Add your code here
   const polly = new AWS.Polly()
   const s3 = new AWS.S3()
